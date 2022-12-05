@@ -6,71 +6,60 @@
 /*   By: arommers <arommers@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/29 14:54:16 by arommers      #+#    #+#                 */
-/*   Updated: 2022/12/02 11:32:44 by arommers      ########   odam.nl         */
+/*   Updated: 2022/12/05 13:59:11 by arommers      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
-#include
 
 char	*ft_str_cut(char *str)
 {
-	//read the line until the break character. Then cut and return that part.
-	char	*dst;
+	char	*new;
 	char	*printline;
 	int		i;
 	int		len;
 	
 	i = 0;
 	len = ft_strlen(str);
-	dst = (!(char *)malloc(sizeof(char) * (len + 1)));
+	new = (!(char *)malloc(sizeof(char) * (len + 1)));
 		return (NULL);
 	if (str == 0)
 		return (NULL);
 	while ((str[i]) && str[i] != '\n')
-		{
-			dst[i] = str[i];
-			i++;
-		}
-	dst[i] = '\n';
-	dst[i + 1] = '\0'
-	printline = dst;
-	free (dst);
+	{
+		new[i] = str[i];
+		i++;
+	}
+	new[i] = '\n';
+	new[i + 1] = '\0'
+	printline = ft_strjoin(printline, new);
+	free (new);
 	return (printline);
 }
 
 char	*update_stash (char *str)
 {
-	// read the line and cut from the first break character onwards. 
-	// Stash becomes the bytes that were read beyond the breakline.
-	// What to do when the str contains more breaklines past the first one?
-	char	*dst;
-	char	*updated_stash;
 	int		i;
+	int		j;
 	int		len;
 	
-	i = 0;
-	len = ft_strlen(str);
-	dst = (!(char *)malloc(sizeof(char) * (len + 1)));
-		return (NULL);
-	if (str[i])
-		while (str[i] != '\n')
-			i++;
+	i = ft_strchr(str, '\n');
+	j = 0;
+	while (str[i + 1])
+	{
+		str[j++] = str[i + 1];
 		i++;
-		while (str[i])
-		{
-			dst [i] = str[i];
-			i++;
-		}
-	dst[i] = '\0'
-	updated_stash = dst;
-	free (dst);
-	return (updated_stash);
+	}
+	while (str[j] != '\0')
+	{
+		str[j] = '\0'
+		j++;
+	}
+	return (str);
 }
 
 char	*read_to_stash(int fd, char *str)
 {
-	// read the line into the buffer. Return the line when a portion of the stored bytes contain a '\n'.
 	char	buffer[BUFFER_SIZE + 1];
 	size_t	cursor;
 
@@ -82,12 +71,12 @@ char	*read_to_stash(int fd, char *str)
 		buffer[cursor] = '\0';
 		str = ft_strjoin(str, buffer));
 	}
+	free(buffer);
 	return (str);
 }
 
 char	*stash_to_line(char *str)
 {
-	// Copy the buffer into the line and cut the part until annd including the '\n'.
 	char	*line;
 	size_t	len;
 
@@ -95,9 +84,11 @@ char	*stash_to_line(char *str)
 	line = (char *)malloc (sizeof(char) * (len + 1));
 	if (!line)
 		return (NULL);
-	line = strcpy(line, str);
+	line = ft_strjoin(line, str);
 	if (ft_strchr(line, '\n' );
 		return (ft_strcut(line));
+	else
+		return ()
 }
 
 char	*get_next_line(int fd)
@@ -107,7 +98,7 @@ char	*get_next_line(int fd)
 
 	stash = read_to_stash(fd, stash);
 	line = stash_to_line(stash);
-	stash = update_stash(stash)
+	stash = update_stash(stash);
 	return(line);
 }
 
