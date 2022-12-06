@@ -6,7 +6,7 @@
 /*   By: arommers <arommers@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/29 14:54:16 by arommers      #+#    #+#                 */
-/*   Updated: 2022/12/06 12:39:41 by arommers      ########   odam.nl         */
+/*   Updated: 2022/12/06 15:47:46 by arommers      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -98,6 +98,8 @@ char	*get_next_line(int fd)
 	static char	*stash;
 	char		*line;
 
+	if ((fd < 0) || read(fd, NULL, 0))
+		return (NULL);
 	stash = read_to_stash(fd, stash);
 	if (stash == NULL)
 		return (NULL);
@@ -111,7 +113,7 @@ int	main(void)
 	int		fd;
 	char	*nxt;
 
-	fd = open("testtext.txt", O_RDONLY);
+	fd = open("sw.txt", O_RDONLY);
 	while ((nxt = get_next_line(fd)))
 		printf("%s", nxt);
 	return (0);

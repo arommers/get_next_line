@@ -6,7 +6,7 @@
 /*   By: arommers <arommers@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/05 13:18:04 by arommers      #+#    #+#                 */
-/*   Updated: 2022/12/06 10:24:17 by arommers      ########   odam.nl         */
+/*   Updated: 2022/12/06 15:46:29 by arommers      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,7 +61,6 @@ char	*ft_strjoin(char *s1, char *s2)
 		new[i++] = s2[j++];
 	new[i] = '\0';
 	free(s1);
-	// free(s2);
 	return (new);
 }
 
