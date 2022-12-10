@@ -6,7 +6,7 @@
 /*   By: arommers <arommers@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/29 14:54:16 by arommers      #+#    #+#                 */
-/*   Updated: 2022/12/06 15:47:46 by arommers      ########   odam.nl         */
+/*   Updated: 2022/12/10 15:12:49 by arommers      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,8 +34,10 @@ char	*ft_str_cut(char *str)
 		new[i] = str[i];
 		i++;
 	}
-	new[i] = '\n';
+	if (new[i + 1])
+		new[i] = '\n';
 	new[i + 1] = '\0';
+	// free (str);
 	return (new);
 }
 
@@ -61,22 +63,27 @@ char	*update_stash(char *str)
 
 char	*read_to_stash(int fd, char *str)
 {
-	char	buffer[BUFFER_SIZE + 1];
-	size_t	cursor;
+	char	*buffer;
+	int		cursor;
 
 	cursor = 1;
 	if (!str)
 		str = ft_calloc(1, 1);
+	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buffer)
+		return (NULL);
 	while (!ft_strchr(str, '\n') && cursor != 0)
 	{
 		cursor = read(fd, buffer, BUFFER_SIZE);
-		if (cursor < 0)
+		if (cursor == -1)
+		{
+			free(buffer);
 			return (NULL);
-		buffer[cursor] = '\0';
+		}
+		buffer[cursor] = 0;
 		str = ft_strjoin(str, buffer);
 	}
-	if (cursor == 0)
-		return (NULL);
+	free(buffer);
 	return (str);
 }
 
@@ -98,7 +105,7 @@ char	*get_next_line(int fd)
 	static char	*stash;
 	char		*line;
 
-	if ((fd < 0) || read(fd, NULL, 0))
+	if ((fd < 0) || read(fd, 0, 0) > 0)
 		return (NULL);
 	stash = read_to_stash(fd, stash);
 	if (stash == NULL)
@@ -109,12 +116,32 @@ char	*get_next_line(int fd)
 }
 
 int	main(void)
+
+
 {
+	char *lines;
+	int i;
+	int fd;
+
+	i = 1;
+	fd = open("sw.txt", O_RDONLY); 
+	while (i <= 11) //force lines to be displayed//change to number of lines
+	{
+	lines = get_next_line(fd);
+	printf("[%03d]: %s\n", i , lines);
+	free (lines);
+	i++;
+	}
+	close(fd);
+	return (0);
+}
 	int		fd;
 	char	*nxt;
 
-	fd = open("sw.txt", O_RDONLY);
-	while ((nxt = get_next_line(fd)))
-		printf("%s", nxt);
-	return (0);
-}
+// // 	fd = open("sw.txt", O_RDONLY);
+// // 	while ((nxt = get_next_line(fd)))
+// // 	{
+// // 		printf("%s\n", nxt);
+// // 	}
+// // 	return (0);
+// // }
