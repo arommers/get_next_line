@@ -6,7 +6,7 @@
 /*   By: arommers <arommers@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/29 14:54:16 by arommers      #+#    #+#                 */
-/*   Updated: 2022/12/10 15:12:49 by arommers      ########   odam.nl         */
+/*   Updated: 2022/12/12 16:08:34 by arommers      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@ char	*ft_str_cut(char *str)
 	len = ft_strlen(str);
 	new = (char *)malloc(sizeof(char) * (len + 1));
 	if (!new)
-		return (NULL);
+		return (free(str), NULL);
 	if (str == 0)
 		return (NULL);
 	while ((str[i]) && str[i] != '\n')
@@ -34,10 +34,10 @@ char	*ft_str_cut(char *str)
 		new[i] = str[i];
 		i++;
 	}
-	if (new[i + 1])
-		new[i] = '\n';
-	new[i + 1] = '\0';
-	// free (str);
+	if (str[i] == '\n')
+		new[i++] = '\n';
+	new[i] = '\0';
+	free(str);
 	return (new);
 }
 
@@ -47,6 +47,8 @@ char	*update_stash(char *str)
 	int		j;
 
 	i = ft_strchr(str, '\n');
+	if (!ft_strchr(str, '\n') && str[i] != '\n')
+		return (free(str), NULL);
 	j = 0;
 	while (str[i + 1])
 	{
@@ -67,8 +69,6 @@ char	*read_to_stash(int fd, char *str)
 	int		cursor;
 
 	cursor = 1;
-	if (!str)
-		str = ft_calloc(1, 1);
 	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
 	if (!buffer)
 		return (NULL);
@@ -78,6 +78,7 @@ char	*read_to_stash(int fd, char *str)
 		if (cursor == -1)
 		{
 			free(buffer);
+			free(str);
 			return (NULL);
 		}
 		buffer[cursor] = 0;
@@ -97,6 +98,8 @@ char	*stash_to_line(char *str)
 	if (!line)
 		return (NULL);
 	line = ft_strjoin(line, str);
+	if (line[0] == 0)
+		return (free(line), NULL);
 	return (ft_str_cut(line));
 }
 
@@ -105,8 +108,10 @@ char	*get_next_line(int fd)
 	static char	*stash;
 	char		*line;
 
-	if ((fd < 0) || read(fd, 0, 0) > 0)
+	if ((fd < 0) || BUFFER_SIZE <= 0)
+	{
 		return (NULL);
+	}
 	stash = read_to_stash(fd, stash);
 	if (stash == NULL)
 		return (NULL);
@@ -115,33 +120,32 @@ char	*get_next_line(int fd)
 	return (line);
 }
 
-int	main(void)
+// int	main(void)
+// {
+// 	char	*lines;
+// 	int		i;
+// 	int		fd;
 
+// 	i = 1;
+// 	fd = open("sw.txt", O_RDONLY);
+// 	while (i <= 11)
+// 	{
+// 		lines = get_next_line(fd);
+// 		printf("%s\n", lines);
+// 		free (lines);
+// 		i++;
+// 	}	
+// 	close(fd);
+// 	return (0);
+// }
 
-{
-	char *lines;
-	int i;
-	int fd;
+// 	int		fd;
+// 	char	*nxt;
 
-	i = 1;
-	fd = open("sw.txt", O_RDONLY); 
-	while (i <= 11) //force lines to be displayed//change to number of lines
-	{
-	lines = get_next_line(fd);
-	printf("[%03d]: %s\n", i , lines);
-	free (lines);
-	i++;
-	}
-	close(fd);
-	return (0);
-}
-	int		fd;
-	char	*nxt;
-
-// // 	fd = open("sw.txt", O_RDONLY);
-// // 	while ((nxt = get_next_line(fd)))
-// // 	{
-// // 		printf("%s\n", nxt);
-// // 	}
-// // 	return (0);
-// // }
+// 	fd = open("sw.txt", O_RDONLY);
+// 	while ((nxt = get_next_line(fd)))
+// 	{
+// 		printf("%s\n", nxt);
+// 	}
+// 	return (0);
+// }

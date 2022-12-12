@@ -6,7 +6,7 @@
 /*   By: arommers <arommers@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/12/05 13:18:04 by arommers      #+#    #+#                 */
-/*   Updated: 2022/12/10 15:43:05 by arommers      ########   odam.nl         */
+/*   Updated: 2022/12/12 14:24:12 by arommers      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,7 @@ int	ft_strchr(char *s, char c)
 
 	i = 0;
 	if (!s)
-		return (1);
+		return (0);
 	while (s[i] != '\0' && s[i] != c)
 		i++;
 	if (s[i] == c)
@@ -48,12 +48,12 @@ char	*ft_strjoin(char *s1, char *s2)
 	i = 0;
 	j = 0;
 	if (!s1)
-		return (s2);
+		s1 = ft_calloc(1, 1);
+	if (!s1 || !s2)
+		return (NULL);
 	new = (char *)malloc(sizeof(char) * (ft_strlen(s1) + ft_strlen(s2) + 1));
 	if (!new)
-		return (NULL);
-	if (s2 == 0)
-		return (NULL);
+		return (free(s1), NULL);
 	while (s1[i])
 	{
 		new[i] = s1[i];
