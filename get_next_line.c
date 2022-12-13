@@ -6,7 +6,7 @@
 /*   By: arommers <arommers@student.codam.nl>         +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2022/11/29 14:54:16 by arommers      #+#    #+#                 */
-/*   Updated: 2022/12/12 16:08:34 by arommers      ########   odam.nl         */
+/*   Updated: 2022/12/13 10:26:11 by arommers      ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,12 +15,13 @@
 #include <fcntl.h>
 #include <unistd.h>
 #include <stdlib.h>
+#include <limits.h>
 
 char	*ft_str_cut(char *str)
 {
 	char	*new;
-	int		i;
-	int		len;
+	size_t	i;
+	size_t	len;
 
 	i = 0;
 	len = ft_strlen(str);
@@ -37,8 +38,42 @@ char	*ft_str_cut(char *str)
 	if (str[i] == '\n')
 		new[i++] = '\n';
 	new[i] = '\0';
-	free(str);
-	return (new);
+	return (free(str), new);
+}
+
+char	*read_to_stash(int fd, char *str)
+{
+	char	*buffer;
+	int		cursor;
+
+	cursor = 1;
+	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buffer)
+		return (NULL);
+	while (!ft_strchr(str, '\n') && cursor != 0)
+	{
+		cursor = read(fd, buffer, BUFFER_SIZE);
+		if (cursor == -1)
+			return (free(buffer), free(str), NULL);
+		buffer[cursor] = 0;
+		str = ft_strjoin(str, buffer);
+	}
+	return (free(buffer), str);
+}
+
+char	*stash_to_line(char *str)
+{
+	char	*line;
+	size_t	len;
+
+	len = ft_strlen(str);
+	line = ft_calloc (sizeof(char), len + 1);
+	if (!line)
+		return (NULL);
+	line = ft_strjoin(line, str);
+	if (line[0] == 0)
+		return (free(line), NULL);
+	return (ft_str_cut(line));
 }
 
 char	*update_stash(char *str)
@@ -63,55 +98,13 @@ char	*update_stash(char *str)
 	return (str);
 }
 
-char	*read_to_stash(int fd, char *str)
-{
-	char	*buffer;
-	int		cursor;
-
-	cursor = 1;
-	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
-	if (!buffer)
-		return (NULL);
-	while (!ft_strchr(str, '\n') && cursor != 0)
-	{
-		cursor = read(fd, buffer, BUFFER_SIZE);
-		if (cursor == -1)
-		{
-			free(buffer);
-			free(str);
-			return (NULL);
-		}
-		buffer[cursor] = 0;
-		str = ft_strjoin(str, buffer);
-	}
-	free(buffer);
-	return (str);
-}
-
-char	*stash_to_line(char *str)
-{
-	char	*line;
-	size_t	len;
-
-	len = ft_strlen(str);
-	line = ft_calloc (sizeof(char), len + 1);
-	if (!line)
-		return (NULL);
-	line = ft_strjoin(line, str);
-	if (line[0] == 0)
-		return (free(line), NULL);
-	return (ft_str_cut(line));
-}
-
 char	*get_next_line(int fd)
 {
 	static char	*stash;
 	char		*line;
 
 	if ((fd < 0) || BUFFER_SIZE <= 0)
-	{
 		return (NULL);
-	}
 	stash = read_to_stash(fd, stash);
 	if (stash == NULL)
 		return (NULL);
