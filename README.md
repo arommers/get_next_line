@@ -42,4 +42,7 @@ The Get_Next_Line function is written as an exercise of the Codam curriculum and
 - We also consider that get_next_line() has an undefined behavior when reading
   a binary file. However, you can implement a logical way to handle this behavior if
   you want to.
-  
+- lseek() and global variables are forbidden.
+
+---
+
