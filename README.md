@@ -46,3 +46,18 @@ The Get_Next_Line function is written as an exercise of the Codam curriculum and
 
 ---
 
+### The Function
+
+**Prototype:**  
+
+`char *get_next_line(int fd);`  
+
+**Parameters**
+
+fd: The file descriptor for reading.  
+
+**Return Value**  
+
+- On success: A pointer to the line read, terminated with a newline character.
+- On end-of-file (EOF): NULL is returned.  
+- On error: NULL is returned.
