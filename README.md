@@ -61,3 +61,81 @@ fd: The file descriptor for reading.
 - On success: A pointer to the line read, terminated with a newline character.
 - On end-of-file (EOF): NULL is returned.  
 - On error: NULL is returned.
+
+Get_next_line carries out its task in three straightforward steps:
+
+- **Read an amount of characters equal to BUFFER_SIZE:**  
+  It begins by using the read function to bring in a portion of the data, placing it into a temporary storage area called a buffer. It does this until the read portion includes a newline '\n' character or it has reached the end of the file.
+
+```
+  char	*read_to_stash(int fd, char *str)
+  {
+	char	*buffer;
+	int		cursor;
+
+	cursor = 1;
+	buffer = (char *)malloc(sizeof(char) * (BUFFER_SIZE + 1));
+	if (!buffer)
+		return (NULL);
+	while (!ft_strchr(str, '\n') && cursor != 0)
+	{
+		cursor = read(fd, buffer, BUFFER_SIZE)**;
+		if (cursor == -1)
+			return (free(buffer), free(str), NULL);
+		buffer[cursor] = 0;
+		str = ft_strjoin(str, buffer);
+	}
+	return (free(buffer), str);
+  }
+```
+
+
+- **Extract the Line:**  
+  Next, the function looks through the buffer and isolates the line up until it reaches the newline character ('\n'). I will return this line to the calling function.
+
+```
+char	*stash_to_line(char *str)
+{
+	char	*line;
+	size_t	len;
+
+	len = ft_strlen(str);
+	line = ft_calloc (sizeof(char), len + 1);
+	if (!line)
+		return (NULL);
+	line = ft_strjoin(line, str);
+	if (line[0] == 0)
+		return (free(line), NULL);
+	return (ft_str_cut(line));
+}
+```
+
+
+- **Prepare for Next Read:**  
+  After successfully retrieving the line, get_next_line makes sure the static buffer is updated. It now starts at the character right after the newline ('\n') character, preparing for the next read.
+
+```
+char	*update_stash(char *str)
+{
+	int		i;
+	int		j;
+
+	i = ft_strchr(str, '\n');
+	if (!ft_strchr(str, '\n') && str[i] != '\n')
+		return (free(str), NULL);
+	j = 0;
+	while (str[i + 1])
+	{
+		str[j++] = str[i + 1];
+		i++;
+	}
+	while (str[j] != '\0')
+	{
+		str[j] = '\0';
+		j++;
+	}
+	return (str);
+}
+```
+
+And that's how get_next_line efficiently processes text, step by step!
