@@ -33,3 +33,13 @@ The Get_Next_Line function is written as an exercise of the Codam curriculum and
   reading from the standard input.
 - Please note that the returned line should include the terminating \n character,
   except if the end of file was reached and does not end with a \n character.
+- Because you will have to read files in get_next_line(), add this option to your
+  compiler call: -D BUFFER_SIZE=n
+  It will define the buffer size for read().
+- We consider that get_next_line() has an undefined behavior if the file pointed to
+  by the file descriptor changed since the last call whereas read() didn’t reach the
+  end of file.
+- We also consider that get_next_line() has an undefined behavior when reading
+  a binary file. However, you can implement a logical way to handle this behavior if
+  you want to.
+  
