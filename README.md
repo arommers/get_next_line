@@ -139,3 +139,8 @@ char	*update_stash(char *str)
 ```
 
 And that's how get_next_line efficiently processes text, step by step!
+
+---
+
+## Remarks
+This project served as a nice introduction to utilizing file descriptors and the read function effectively. While I acknowledge there may be room for improvement in how I managed the process of isolating lines up to and including the newline character, I consider it a valuable learning experience and an opportunity for future improvement.
