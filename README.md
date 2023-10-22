@@ -8,7 +8,7 @@ This project is particularly useful for applications where line-by-line input pr
 
 ---
 
-## Usage
+### Usage
 To use get_next_line in your project, follow these steps:
 
 - Clone this repository or download the source files by clicking the green code button in the upper right corner.  
@@ -22,7 +22,7 @@ To use get_next_line in your project, follow these steps:
 
   ---
 
-## Requirements
+### Requirements
 
 The Get_Next_Line function is written as an exercise of the Codam curriculum and has to adhere to the following rules:
 - Repeated calls (e.g., using a loop) to your get_next_line() function should let
@@ -142,12 +142,12 @@ And that's how get_next_line efficiently processes text, step by step!
 
 ---
 
-## Remarks
+### Remarks
 This project served as a nice introduction to utilizing file descriptors and the read function effectively. While I acknowledge there may be room for improvement in how I managed the process of isolating lines up to and including the newline character, I consider it a valuable learning experience and an opportunity for future improvement.
 
 ---
 
-## Sources
+### Sources
 - [Reading a line from a file](https://www.youtube.com/watch?v=w0mgn6OLKUs&t=178s)
 - [Man pages Read](https://man7.org/linux/man-pages/man2/read.2.html)
 - [Input/Output](https://www.geeksforgeeks.org/input-output-system-calls-c-create-open-close-read-write/)
